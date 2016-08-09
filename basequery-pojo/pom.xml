@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>eenet.data.basequery</groupId>
+    <artifactId>basequery-products-test</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>basequery-pojo</artifactId>
+  <name>basequery-pojo</name>
+   <packaging>bundle</packaging>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+ 
+ <dependencies>
+       <dependency>
+		<groupId>com.eenet.framework</groupId>
+		<artifactId>base-pojo</artifactId>
+		<version>${dev-framework.version}</version>
+	</dependency>
+  </dependencies>
+</project>

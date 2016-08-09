@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.sales.SaleStudent" >
+	<resultMap type="com.eenet.basequery.sales.SaleStudent" id="default">
+		<result column="STUDENT_ID" property="studentId" jdbcType="VARCHAR" />
+		<result column="STUDENT_NAME" property="studentName" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="PROVINCE_CODE" property="provinceCode" jdbcType="VARCHAR" />
+		<result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR" />
+		<result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+		<result column="CITY_NAME" property="cityName" jdbcType="VARCHAR" />
+		<result column="DISTRICT_CODE" property="districtCode" jdbcType="VARCHAR" />
+		<result column="DISTINCT_NAME" property="distinctName" jdbcType="VARCHAR" />
+		<result column="ADD_DATE" property="addDate" jdbcType="DATE" />
+		<result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+		<result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="SALE_LOGIN_ACCOUNT" property="saleLoginAccount" jdbcType="VARCHAR" />
+		<result column="SALE_STAFF_NAME" property="saleStaffName" jdbcType="VARCHAR" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		select count(1) from (
+			SELECT
+				a.STUDENT_ID,				
+				b.STUDENT_NAME,				 
+				b.MOBILE,				
+				b.PROVINCE AS PROVINCE_code,				
+				c.AREA_NAME AS PROVINCE_name,				
+				b.CITY AS city_code,				
+				d.AREA_NAME AS city_name,				
+				b.DISTRICT AS DISTRICT_code,				
+				e.AREA_NAME AS DISTINCT_name,			
+				c.ADD_DATE,				
+				c.ORDER_STATUS,				 
+				d.CUSTOMER_NAME,				
+				f.LOGIN_ACCOUNT,			
+				g.STAFF_NAME,				
+				h.LOGIN_ACCOUNT AS SALE_LOGIN_ACCOUNT,				
+				I.STAFF_NAME AS SALE_STAFF_NAME 
+			FROM 
+				DW_STUDENT_STATUS_INFO a 
+				INNER JOIN DW_STUDENT_INFO b ON b.STUDENT_ID = a.STUDENT_ID
+				LEFT JOIN DW_ORDER_INFO c ON c.STUDENT_ID = a.STUDENT_ID
+				LEFT JOIN DW_CUSTOMER_INFO d ON d.CUSTOMER_ID = c.CUSTOMER_ID
+				LEFT JOIN DW_CHANNEL_CUSTOMER e ON e.CUSTOMER_ID = d.CUSTOMER_ID
+				LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT f ON f.ADMIN_LOGIN_ACCOUNT_ID = e.ADMIN_LOGIN_ACCOUNT_ID
+				LEFT JOIN DW_STAFF_INFO g ON g.STAFF_ID = f.ADMIN_ID
+				LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT h ON h.ADMIN_LOGIN_ACCOUNT_ID = c.LEARNCENTER_USER_ID
+				LEFT JOIN DW_STAFF_INFO i ON i.STAFF_ID = h.ADMIN_ID
+				LEFT JOIN DW_AREA j ON j.AREA_CODE = b.PROVINCE
+				LEFT JOIN DW_AREA k ON k.AREA_CODE = b.CITY
+				LEFT JOIN DW_AREA l ON l.AREA_CODE = b.DISTRICT
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				a.STUDENT_ID,				
+				b.STUDENT_NAME,				 
+				b.MOBILE,				
+				b.PROVINCE AS PROVINCE_code,				
+				j.AREA_NAME AS PROVINCE_name,				
+				b.CITY AS CITY_CODE,				
+				k.AREA_NAME AS CITY_NAME,				
+				b.DISTRICT AS DISTRICT_code,				
+				i.AREA_NAME AS DISTINCT_name,			
+				c.ADD_DATE,				
+				c.ORDER_STATUS,				 
+				d.CUSTOMER_NAME,				
+				f.LOGIN_ACCOUNT,			
+				g.STAFF_NAME,				
+				h.LOGIN_ACCOUNT AS SALE_LOGIN_ACCOUNT,				
+				I.STAFF_NAME AS SALE_STAFF_NAME ,
+				a.CREATED_DT
+			FROM 
+				DW_STUDENT_STATUS_INFO a 
+				INNER JOIN DW_STUDENT_INFO b ON b.STUDENT_ID = a.STUDENT_ID
+				LEFT JOIN DW_ORDER_INFO c ON c.STUDENT_ID = a.STUDENT_ID
+				LEFT JOIN DW_CUSTOMER_INFO d ON d.CUSTOMER_ID = c.CUSTOMER_ID
+				LEFT JOIN DW_CHANNEL_CUSTOMER e ON e.CUSTOMER_ID = d.CUSTOMER_ID
+				LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT f ON f.ADMIN_LOGIN_ACCOUNT_ID = e.ADMIN_LOGIN_ACCOUNT_ID
+				LEFT JOIN DW_STAFF_INFO g ON g.STAFF_ID = f.ADMIN_ID
+				LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT h ON h.ADMIN_LOGIN_ACCOUNT_ID = c.LEARNCENTER_USER_ID
+				LEFT JOIN DW_STAFF_INFO i ON i.STAFF_ID = h.ADMIN_ID
+				LEFT JOIN DW_AREA j ON j.AREA_CODE = b.PROVINCE
+				LEFT JOIN DW_AREA k ON k.AREA_CODE = b.CITY
+				LEFT JOIN DW_AREA l ON l.AREA_CODE = b.DISTRICT
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>

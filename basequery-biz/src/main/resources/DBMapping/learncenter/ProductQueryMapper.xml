@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.learncenter.ProductQuery" >
+	<resultMap type="com.eenet.basequery.learncenter.ProductQuery" id="default">
+		<result column="NETWORK_SCHOOL_CODE" property="netWorkSchoolCode" jdbcType="VARCHAR" />
+	    <result column="SCHOOL_CHINESE_NAME" property="schoolChineseName" jdbcType="VARCHAR" />
+	    <result column="PRODUCT_CODE" property="productCode" jdbcType="VARCHAR" />
+	    <result column="PRODUCT_NAME" property="productName" jdbcType="TIMESTAMP" />
+	    <result column="STUDY_PERIOD" property="studyPreriod" jdbcType="VARCHAR" />
+	    <result column="FEE_DESC" property="feeDesc" jdbcType="VARCHAR" />
+	    <result column="PRODUCT_HOUR" property="productHour" jdbcType="VARCHAR" />
+   		<result column="GRADE_ID" property="gradeId" jdbcType="VARCHAR" />
+   		<result column="GRADE_NAME" property="gradeName" jdbcType="VARCHAR" />
+    	<result column="BASE_NUM" property="baseNum" jdbcType="VARCHAR" />
+    	<result column="SALES_STATUS" property="salesStatus" jdbcType="VARCHAR" />
+    	<result column="SALES_STATUS_NAME" property="salesStatusName" jdbcType="VARCHAR" />
+    	<result column="SALES_MODEL" property="salesModel" jdbcType="VARCHAR" />
+    	<result column="SALES_MODEL_NAME" property="salesModelName" jdbcType="VARCHAR" />
+    	<result column="FEE_AUDIT_STATUS" property="feeAuditStatus" jdbcType="VARCHAR" />
+    	<result column="FEE_AUDIT_STATUS_NAME" property="feeAuditStatusName" jdbcType="VARCHAR" />
+    	<result column="ON_SHELVES_STATUS" property="onShelvesStatus" jdbcType="VARCHAR" />
+    	<result column="ON_SHELVES_STATUS_NAME" property="onShelvesStatusName" jdbcType="VARCHAR" />
+    	<result column="APPLY_START_DT" property="applyEndDt" jdbcType="DATE" />
+     	<result column="APPLY_END_DT" property="applyEndDt" jdbcType="DATE" />
+     	<result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		SELECT count(1) FROM (
+			SELECT
+				a.NETWORK_SCHOOL_CODE,
+				a.SCHOOL_CHINESE_NAME,
+				b.PRODUCT_CODE,
+				b.PRODUCT_NAME,
+				b.STUDY_PERIOD,
+				b.FEE_DESC,
+				b.PRODUCT_HOUR,
+				b.GRADE_ID,
+				c.GRADE_NAME,
+				b.BASE_NUM,
+				b.SALES_STATUS,
+				b.SALES_MODEL,
+				b.FEE_AUDIT_STATUS,
+				b.ON_SHELVES_STATUS,
+				b.APPLY_START_DT,
+				b.APPLY_END_DT
+			FROM
+				DW_NETWORK_SCHOOL_INFO a
+			INNER JOIN DW_PRODUCT_INFO b ON b.NETWORK_SCHOOL_CODE = a.NETWORK_SCHOOL_CODE
+			LEFT JOIN DW_GRADE_INFO c ON c.GRADE_ID = b.GRADE_ID
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				a.NETWORK_SCHOOL_CODE,
+				a.SCHOOL_CHINESE_NAME,
+				b.PRODUCT_CODE,
+				b.PRODUCT_NAME,
+				b.STUDY_PERIOD,
+				b.FEE_DESC,
+				b.PRODUCT_HOUR,
+				b.GRADE_ID,
+				c.GRADE_NAME,
+				b.BASE_NUM,
+				b.SALES_STATUS,
+				d.CODE_NAME as SALES_STATUS_NAME,
+				b.SALES_MODEL,
+				e.CODE_NAME as SALES_MODEL_NAME,
+				b.FEE_AUDIT_STATUS,
+				f.CODE_NAME as FEE_AUDIT_STATUS_NAME,
+				b.ON_SHELVES_STATUS,
+				g.CODE_NAME as ON_SHELVES_STATUS_NAME,
+				b.APPLY_START_DT,
+				b.APPLY_END_DT,
+				b.CREATED_DT
+			FROM
+				DW_NETWORK_SCHOOL_INFO a
+			INNER JOIN DW_PRODUCT_INFO b ON b.NETWORK_SCHOOL_CODE = a.NETWORK_SCHOOL_CODE
+			LEFT JOIN DW_GRADE_INFO c ON c.GRADE_ID = b.GRADE_ID
+			LEFT JOIN DW_SYS_DATA d on d.CODE_VALUE = b.SALES_STATUS and d.DICT_TYPE_CODE = 'SALES_STATUS'
+			LEFT JOIN DW_SYS_DATA e on e.CODE_VALUE = b.SALES_MODEL and e.DICT_TYPE_CODE = 'SALES_MODEL'
+			LEFT JOIN DW_SYS_DATA f on f.CODE_VALUE = b.FEE_AUDIT_STATUS  and f.DICT_TYPE_CODE = 'FEE_AUDIT_STATUS'
+			LEFT JOIN DW_SYS_DATA g on g.CODE_VALUE = b.ON_SHELVES_STATUS  and g.DICT_TYPE_CODE = 'ON_SHELVES_STATUS'
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>

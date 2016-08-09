@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.resource.RECourse" >
+	<resultMap type="com.eenet.basequery.resource.RECourse" id="default">
+		<result column="COURSE_ID" property="courseId" jdbcType="VARCHAR" />
+		<result column="COURSE_NAME" property="courseName" jdbcType="VARCHAR" />
+		<result column="COURSE_STATUS" property="courseStatus" jdbcType="VARCHAR" />
+		<result column="COURSE_STATUS_NAME" property="courseStatusName" jdbcType="VARCHAR" />
+		<result column="COURSE_TYPE" property="courseType" jdbcType="VARCHAR" />
+		<result column="COURSE_TYPE_NAME" property="courseTypeName" jdbcType="VARCHAR" />
+		<result column="NETWORK_SCHOOL_CODE" property="networkSchoolCode" jdbcType="VARCHAR" />
+		<result column="SCHOOL_CHINESE_NAME" property="schoolChineseName" jdbcType="VARCHAR" />
+		<result column="PUBLISH_DT" property="publishDt" jdbcType="VARCHAR" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="VARCHAR" />
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		select count(1) from (
+			SELECT 
+				a.COURSE_ID,				
+				a.COURSE_NAME,				
+				a.COURSE_STATUS,				 
+				a.COURSE_TYPE,				
+				a.NETWORK_SCHOOL_CODE,				
+				b.SCHOOL_CHINESE_NAME,				 
+				a.PUBLISH_DT,				
+				a.CREATED_DT
+			FROM 
+				DW_COURSE_INFO a 
+				LEFT JOIN DW_NETWORK_SCHOOL_INFO B ON B.NETWORK_SCHOOL_CODE = A.NETWORK_SCHOOL_CODE
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT 
+				a.COURSE_ID,				
+				a.COURSE_NAME,		
+				a.COURSE_STATUS,				 
+				c.CODE_NAME as COURSE_STATUS_NAME,	
+				a.COURSE_TYPE,		
+				d.CODE_NAME as COURSE_TYPE_NAME,		
+				a.NETWORK_SCHOOL_CODE,				
+				b.SCHOOL_CHINESE_NAME,				 
+				a.PUBLISH_DT,				
+				a.CREATED_DT
+			FROM 
+				DW_COURSE_INFO a 
+				LEFT JOIN DW_NETWORK_SCHOOL_INFO B ON B.NETWORK_SCHOOL_CODE = A.NETWORK_SCHOOL_CODE
+				LEFT JOIN DW_SYS_DATA c on c.CODE_VALUE = a.COURSE_STATUS and c.DICT_TYPE_CODE = 'COURSE_STATUS'
+				LEFT JOIN DW_SYS_DATA d on d.CODE_VALUE = a.COURSE_TYPE and d.DICT_TYPE_CODE = 'COURSE_TYPE'
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>

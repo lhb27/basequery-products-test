@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<mappers>
+		<!--公共SQL配置-->
+        <mapper resource="conf/base.Oracle.mbt.xml" />
+        <mapper resource="conf/base.PostgreSQL.mbt.xml" />
+        <mapper resource="conf/base.MySQL.mbt.xml" />
+        <!-- 业务模块 -->
+        <mapper resource="DBMapping/learncenter/ProductQueryMapper.xml" />
+        <mapper resource="DBMapping/learncenter/LCStudentDynaMapper.xml" />
+        <mapper resource="DBMapping/learncenter/LCStudentStatusMapper.xml" />
+        <mapper resource="DBMapping/platform/PFStudentDynaMapper.xml" />
+        <mapper resource="DBMapping/platform/PFStudentMapper.xml" />            
+        <mapper resource="DBMapping/platform/PFStudentStatusMapper.xml" />       
+        <mapper resource="DBMapping/resource/RECourseMapper.xml" />   
+        <mapper resource="DBMapping/resource/REStudentAssessMapper.xml" />
+        <mapper resource="DBMapping/resource/REStudentStatusMapper.xml" />
+        <mapper resource="DBMapping/sales/SaleCustomerMapper.xml" />
+        <mapper resource="DBMapping/sales/SaleOrderMapper.xml" />            
+        <mapper resource="DBMapping/sales/SaleStudentDynaMapper.xml" />   
+        <mapper resource="DBMapping/sales/SaleStudentMapper.xml" />   
+	</mappers>
+</configuration>

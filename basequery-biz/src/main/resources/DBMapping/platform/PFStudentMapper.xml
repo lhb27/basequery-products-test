@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.platform.PFStudent" >
+	<resultMap type="com.eenet.basequery.platform.PFStudent" id="default">
+		<result column="STUDENT_ID" property="studentId" jdbcType="VARCHAR" />
+		<result column="STUDENT_NAME" property="studentName" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="VARCHAR" />
+		<result column="UNIT_CODE" property="unitCode" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+		<result column="DEGREE" property="degree" jdbcType="VARCHAR" />
+		<result column="BIRTHDAY" property="birthday" jdbcType="VARCHAR" />
+		<result column="WORK_TIME" property="workTime" jdbcType="VARCHAR" />
+		<result column="NETWORK_SCHOOL_CODE" property="networkSchoolCode" jdbcType="VARCHAR" />
+		<result column="SCHOOL_CHINESE_NAME" property="schoolChineseName" jdbcType="VARCHAR" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		select count(1) from (
+			SELECT
+				a.STUDENT_ID,			
+				a.STUDENT_NAME,				
+				a.SEX,				
+				a.unit_code,				
+				d.CUSTOMER_NAME,				
+				a.DEGREE,				
+				a.BIRTHDAY,				
+				a.WORK_TIME,				
+				b.NETWORK_SCHOOL_CODE,				
+				c.SCHOOL_CHINESE_NAME,				
+				b.CREATED_DT
+			FROM
+				DW_STUDENT_INFO a
+			LEFT JOIN DW_STUDENT_STATUS_INFO b ON b.STUDENT_ID = a.STUDENT_ID
+			LEFT JOIN DW_NETWORK_SCHOOL_INFO c ON c.NETWORK_SCHOOL_CODE = b.NETWORK_SCHOOL_CODE
+			LEFT JOIN DW_CUSTOMER_INFO d ON d.CUSTOMER_CODE = a.UNIT_CODE
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				a.STUDENT_ID,			
+				a.STUDENT_NAME,				
+				a.SEX,				
+				a.unit_code,				
+				d.CUSTOMER_NAME,				
+				a.DEGREE,				
+				a.BIRTHDAY,				
+				a.WORK_TIME,				
+				b.NETWORK_SCHOOL_CODE,				
+				c.SCHOOL_CHINESE_NAME,				
+				b.CREATED_DT
+			FROM
+				dw_student_info a
+			LEFT JOIN DW_STUDENT_STATUS_INFO b ON b.STUDENT_ID = a.STUDENT_ID
+			LEFT JOIN DW_NETWORK_SCHOOL_INFO c ON c.NETWORK_SCHOOL_CODE = b.NETWORK_SCHOOL_CODE
+			LEFT JOIN DW_CUSTOMER_INFO d ON d.CUSTOMER_CODE = a.UNIT_CODE
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>

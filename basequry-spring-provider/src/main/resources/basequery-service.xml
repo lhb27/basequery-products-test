@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-4.2.xsd   
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<bean id="productQueryDaoService" class="com.eenet.basequery.learncenter.dao.impl.ProductQueryDaoServiceImpl">
+		<property name="batisSession" ref="batisSession" />
+	</bean>
+
+	<!-- 产品销售情况查询服务 -->
+	<bean id="productQueryService" class="com.eenet.basequery.learncenter.ProductQueryServiceImpl">
+			<property name="productQueryDaoService" ref="productQueryDaoService" />
+	</bean>	
+	
+		<!-- 学习中心学员学情-->
+	<bean id="LCStudentDynaService" class="com.eenet.basequery.learncenter.LCStudentDynaServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>	
+	
+		<!-- 学习中心学员学籍 -->
+	<bean id="LCStudentStatusService" class="com.eenet.basequery.learncenter.LCStudentStatusServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+		<!-- 预报读订单情况 -->
+	<bean id="LCReserveOrderService" class="com.eenet.basequery.learncenter.LCReserveOrderServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+		
+		<!-- 平台中心学员学习情况-->
+	<bean id="PFStudentDynaService" class="com.eenet.basequery.platform.PFStudentDynaServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>	
+	
+		<!-- 平台中心学员学籍 -->
+	<bean id="PFStudentStatusService" class="com.eenet.basequery.platform.PFStudentStatusServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>	
+	
+		<!-- 平台中心学员信息-->
+	<bean id="PFStudentService" class="com.eenet.basequery.platform.PFStudentServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+		<!-- 资源中心课程信息-->
+	<bean id="RECourseService" class="com.eenet.basequery.resource.RECourseServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+		<!-- 资源中心课程考核信息-->
+	<bean id="REStudentAssessService" class="com.eenet.basequery.resource.REStudentAssessServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+		<!-- 资源中心学员报读信息-->
+	<bean id="REStudentStatusService" class="com.eenet.basequery.resource.REStudentStatusServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+		<!-- 推广客户企业信息-->
+	<bean id="SaleCustomerService" class="com.eenet.basequery.sales.SaleCustomerServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+		<!-- 销售订单信息-->
+	<bean id="SaleOrderService" class="com.eenet.basequery.sales.SaleOrderServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+		<!-- 推广学员学情信息-->
+	<bean id="SaleStudentDynaService" class="com.eenet.basequery.sales.SaleStudentDynaServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+	
+			<!-- 推广学员信息-->
+	<bean id="SaleStudentService" class="com.eenet.basequery.sales.SaleStudentServiceImpl">
+			<property name="baseDAOService" ref="GenericDAO" />
+	</bean>
+</beans>

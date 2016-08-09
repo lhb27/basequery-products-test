@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.platform.PFStudentDyna" >
+	<resultMap type="com.eenet.basequery.platform.PFStudentDyna" id="default">
+		<result column="STUDENT_ID" property="studentId" jdbcType="VARCHAR" />
+		<result column="STUDENT_NAME" property="studentName" jdbcType="VARCHAR" />
+		<result column="LEARN_NUMBER" property="learnNumber" jdbcType="VARCHAR" />
+		<result column="NETWORK_SCHOOL_CODE" property="networkSchoolCode" jdbcType="VARCHAR" />
+		<result column="SCHOOL_CHINESE_NAME" property="schoolChineseName" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_ID" property="learncenterId" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_NAME" property="learncenterName" jdbcType="VARCHAR" />
+		<result column="UNIT_CODE" property="unitCode" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+		<result column="EDUCATION_PRODUCT_ID" property="educationProductId" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="PRODUCT_TYPE_CODE" property="productTypeCode" jdbcType="VARCHAR" />
+		<result column="PRODUCT_TYPE_NAME" property="productTypeName" jdbcType="VARCHAR" />
+		<result column="GRADE_ID" property="gradeId" jdbcType="VARCHAR" />
+		<result column="GRADE_NAME" property="gradeName" jdbcType="VARCHAR" />
+		<result column="TERM_ID" property="termId" jdbcType="VARCHAR" />
+		<result column="TERM_NAME" property="termName" jdbcType="VARCHAR" />
+		<result column="LASS_ID" property="lassId" jdbcType="VARCHAR" />
+		<result column="LASS_NAME" property="lassName" jdbcType="VARCHAR" />
+		<result column="ACT_COUNT" property="actCount" jdbcType="VARCHAR" />
+		<result column="MUST_COUNT" property="mustCount" jdbcType="VARCHAR" />
+		<result column="MY_ACTCOUNT" property="myActcount" jdbcType="VARCHAR" />
+		<result column="MY_MUSTACTCOUNT" property="myMustactcount" jdbcType="VARCHAR" />
+		<result column="MY_COURSE_PROGRESS" property="myCourseProgress" jdbcType="VARCHAR" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		select count(1) from (
+			SELECT
+					a.STUDENT_ID,					
+					d.STUDENT_NAME,					
+					a.LEARN_NUMBER,					
+					a.NETWORK_SCHOOL_CODE,					
+					e.SCHOOL_CHINESE_NAME,					
+					a.LEARNCENTER_ID,					
+					f.LEARNCENTER_NAME,					
+					d.UNIT_CODE,					
+					j.CUSTOMER_NAME,					
+					a.EDUCATION_PRODUCT_ID,					
+					g.PRODUCT_NAME,					
+					a.PRODUCT_TYPE_CODE,					
+					a.GRADE_ID,					
+					k.GRADE_NAME,					
+					b.TERM_ID,					
+					h.TERM_NAME,					
+					b.CLASS_ID,					
+					i.CLASS_NAME,					
+					c.ACT_COUNT,					
+					c.MUST_COUNT,					
+					c.MY_ACTCOUNT,					
+					c.MY_MUSTACTCOUNT,					
+					c.MY_COURSE_PROGRESS,					
+					b.CREATED_DT 
+				FROM
+					DW_STUDENT_STATUS_INFO a
+				LEFT JOIN DW_STUDENT_CHOOSE b ON b.SCHOOL_ROLL_ID = a.SCHOOL_ROLL_ID
+				LEFT JOIN DW_USER_DYNA c ON c.CHOOSE_ID = b.STUDENT_CHOOSE_ID
+				INNER JOIN DW_STUDENT_INFO d ON d.STUDENT_ID = a.STUDENT_ID
+				LEFT JOIN DW_NETWORK_SCHOOL_INFO e ON e.NETWORK_SCHOOL_CODE = A.NETWORK_SCHOOL_CODE
+				LEFT JOIN DW_LEARNCENTER_INFO f ON f.LEARNCENTER_ID = a.LEARNCENTER_ID
+				INNER JOIN DW_EDUCATION_PRODCUT_INFO g ON g.EDUCATION_PRODUCT_ID = a.EDUCATION_PRODUCT_ID
+				LEFT JOIN DW_TERM_INFO h ON h.TERM_ID = b.TERM_ID
+				LEFT JOIN DW_CLASS_INFO i ON i.CLASS_ID = b.CLASS_ID
+				LEFT JOIN DW_CUSTOMER_INFO j ON j.CUSTOMER_CODE = d.UNIT_CODE
+				LEFT JOIN DW_GRADE_INFO k ON k.GRADE_ID = a.GRADE_ID
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+					a.STUDENT_ID,					
+					d.STUDENT_NAME,					
+					a.LEARN_NUMBER,					
+					a.NETWORK_SCHOOL_CODE,					
+					e.SCHOOL_CHINESE_NAME,					
+					a.LEARNCENTER_ID,					
+					f.LEARNCENTER_NAME,					
+					d.UNIT_CODE,					
+					j.CUSTOMER_NAME,					
+					a.EDUCATION_PRODUCT_ID,					
+					g.PRODUCT_NAME,					
+					a.PRODUCT_TYPE_CODE,	
+					l.CODE_NAME as PRODUCT_TYPE_NAME,					
+					a.GRADE_ID,					
+					k.GRADE_NAME,					
+					b.TERM_ID,					
+					h.TERM_NAME,					
+					b.CLASS_ID,					
+					i.CLASS_NAME,					
+					c.ACT_COUNT,					
+					c.MUST_COUNT,					
+					c.MY_ACTCOUNT,					
+					c.MY_MUSTACTCOUNT,					
+					c.MY_COURSE_PROGRESS,					
+					b.CREATED_DT 
+				FROM
+					DW_STUDENT_STATUS_INFO a
+				LEFT JOIN DW_STUDENT_CHOOSE b ON b.SCHOOL_ROLL_ID = a.SCHOOL_ROLL_ID
+				LEFT JOIN DW_USER_DYNA c ON c.CHOOSE_ID = b.STUDENT_CHOOSE_ID
+				INNER JOIN DW_STUDENT_INFO d ON d.STUDENT_ID = a.STUDENT_ID
+				LEFT JOIN DW_NETWORK_SCHOOL_INFO e ON e.NETWORK_SCHOOL_CODE = A.NETWORK_SCHOOL_CODE
+				LEFT JOIN DW_LEARNCENTER_INFO f ON f.LEARNCENTER_ID = a.LEARNCENTER_ID
+				INNER JOIN DW_EDUCATION_PRODCUT_INFO g ON g.EDUCATION_PRODUCT_ID = a.EDUCATION_PRODUCT_ID
+				LEFT JOIN DW_TERM_INFO h ON h.TERM_ID = b.TERM_ID
+				LEFT JOIN DW_CLASS_INFO i ON i.CLASS_ID = b.CLASS_ID
+				LEFT JOIN DW_CUSTOMER_INFO j ON j.CUSTOMER_CODE = d.UNIT_CODE
+				LEFT JOIN DW_GRADE_INFO k ON k.GRADE_ID = a.GRADE_ID
+				LEFT JOIN DW_SYS_DATA l on l.CODE_VALUE = a.PRODUCT_TYPE_CODE and l.DICT_TYPE_CODE = 'PRODUCT_TYPE_CODE'
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>

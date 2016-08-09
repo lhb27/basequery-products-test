@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.sales.SaleOrder" >
+	<resultMap type="com.eenet.basequery.sales.SaleOrder" id="default">
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="ORDER_SN" property="orderSn" jdbcType="VARCHAR" />
+		<result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="ORDER_STATUS_NAME" property="orderStatusName" jdbcType="VARCHAR" />
+		<result column="PAY_STATUS" property="payStatus" jdbcType="VARCHAR" />
+		<result column="PAY_STATUS_NAME" property="payStatusName" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_CODE" property="learncenterCode" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_NAME" property="learncenterName" jdbcType="VARCHAR" />
+		<result column="NETWORK_SCHOOL_CODE" property="networkSchoolCode" jdbcType="VARCHAR" />
+		<result column="SCHOOL_CHINESE_NAME" property="schoolChineseName" jdbcType="VARCHAR" />
+		<result column="STUDENT_ID" property="studentId" jdbcType="VARCHAR" />
+		<result column="STUDENT_NAME" property="studentName" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_USER_ID" property="learncenterUserId" jdbcType="VARCHAR" />
+		<result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="ADD_DATE" property="addDate" jdbcType="DATE" />
+		<result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		select count(1) from (
+			SELECT
+				a.ORDER_ID,				
+				a.ORDER_SN,				
+				a.ORDER_STATUS,			
+				a.PAY_STATUS,				
+				a.LEARNCENTER_CODE,				
+				d.LEARNCENTER_NAME,				
+				a.NETWORK_SCHOOL_CODE,	
+				c.SCHOOL_CHINESE_NAME,			
+				a.STUDENT_ID,				
+				f.STUDENT_NAME,				
+				a.LEARNCENTER_USER_ID,				
+				g.LOGIN_ACCOUNT,				
+				h.STAFF_NAME,				
+				a.ADD_DATE,				
+				b.PRODUCT_ID,				
+				e.PRODUCT_NAME 
+			FROM
+				DW_ORDER_INFO a
+			INNER JOIN DW_ORDER_GOODS b ON b.ORDER_ID = a.ORDER_ID
+			INNER JOIN DW_NETWORK_SCHOOL_INFO c ON c.NETWORK_SCHOOL_CODE = a.NETWORK_SCHOOL_CODE
+			INNER JOIN DW_LEARNCENTER_INFO d ON d.LEARNCENTER_CODE = a.LEARNCENTER_CODE
+			INNER JOIN DW_PRODUCT_INFO e ON e.PRODUCT_ID = b.PRODUCT_ID
+			INNER JOIN DW_STUDENT_INFO f ON f.STUDENT_ID = a.STUDENT_ID
+			INNER JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT g ON g.ADMIN_LOGIN_ACCOUNT_ID = a.LEARNCENTER_USER_ID
+			INNER JOIN DW_STAFF_INFO h ON h.STAFF_ID = g.ADMIN_ID
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				a.ORDER_ID,				
+				a.ORDER_SN,				
+				a.ORDER_STATUS,			
+				h.ORDER_STATUS_NAME,
+				a.PAY_STATUS,		
+				CASE WHEN a.PAY_STATUS = 'Y' THEN '已支付' ELSE '未支付' END PAY_STATUS_NAME	,	
+				a.LEARNCENTER_CODE,				
+				d.LEARNCENTER_NAME,				
+				a.NETWORK_SCHOOL_CODE,	
+				c.SCHOOL_CHINESE_NAME,			
+				a.STUDENT_ID,				
+				f.STUDENT_NAME,				
+				a.LEARNCENTER_USER_ID,				
+				g.LOGIN_ACCOUNT,				
+				h.STAFF_NAME,				
+				a.ADD_DATE,				
+				b.PRODUCT_ID,				
+				e.PRODUCT_NAME 
+			FROM
+				DW_ORDER_INFO a
+			INNER JOIN DW_ORDER_GOODS b ON b.ORDER_ID = a.ORDER_ID
+			INNER JOIN DW_NETWORK_SCHOOL_INFO c ON c.NETWORK_SCHOOL_CODE = a.NETWORK_SCHOOL_CODE
+			INNER JOIN DW_LEARNCENTER_INFO d ON d.LEARNCENTER_CODE = a.LEARNCENTER_CODE
+			INNER JOIN DW_PRODUCT_INFO e ON e.PRODUCT_ID = b.PRODUCT_ID
+			INNER JOIN DW_STUDENT_INFO f ON f.STUDENT_ID = a.STUDENT_ID
+			INNER JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT g ON g.ADMIN_LOGIN_ACCOUNT_ID = a.LEARNCENTER_USER_ID
+			INNER JOIN DW_STAFF_INFO h ON h.STAFF_ID = g.ADMIN_ID
+			LEFT JOIN DW_SYS_DATA h on h.CODE_VALUE = a.ORDER_STATUS and h.DICT_TYPE_CODE = 'ORDER_STATUS'
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>

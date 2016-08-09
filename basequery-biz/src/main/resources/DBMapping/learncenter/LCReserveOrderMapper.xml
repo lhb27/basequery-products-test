@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.learncenter.LCReserveOrder" >
+	<resultMap type="com.eenet.basequery.learncenter.LCReserveOrder" id="default">
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="USER_ACCOUNT_ID" property="userAccountId" jdbcType="VARCHAR" />
+		<result column="STUDENT_NAME" property="studentName" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="COLLEGES" property="colleges" jdbcType="VARCHAR" />
+		<result column="SCHOOLCHINESENAME" property="schoolchinesename" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_ID" property="learncenterId" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_NAME" property="learncenterName" jdbcType="VARCHAR" />
+		<result column="LEARNCENTER_USER_ID" property="learncenterUserId" jdbcType="VARCHAR" />
+		<result column="LOGIN_ACCOUNT" property="loginAccount" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+		<result column="FOLLOW_RESULT" property="followResult" jdbcType="VARCHAR" />
+		<result column="FOLLOW_RESULT_NAME" property="followResultName" jdbcType="VARCHAR" />
+		<result column="FOLLOW_CONTENT" property="followContent" jdbcType="VARCHAR" />
+		<result column="FOLLOW_DATE" property="followDate" jdbcType="DATE" />
+		<result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="ORDER_STATUS_NAME" property="orderStatusName" jdbcType="VARCHAR" />
+		<result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		SELECT count(1) FROM (
+			SELECT
+				a.USER_ID,				
+				a.USER_ACCOUNT_ID,				
+				h.STUDENT_NAME,				
+				h.MOBILE,				
+				a.PRODUCT_ID,				
+				i.PRODUCT_NAME,			
+				a.COLLEGES,				
+				a.COLLEGES AS SCHOOLCHINESENAME,				
+				d.LEARNCENTER_ID,				
+				f.LEARNCENTER_NAME,				
+				b.LEARNCENTER_USER_ID,				
+				c.LOGIN_ACCOUNT,				
+				e.STAFF_NAME,				
+				b.FOLLOW_RESULT,				
+				b.FOLLOW_CONTENT,				
+				b.FOLLOW_DATE,				
+				a.ORDER_STATUS,				
+				a.CREATED_DT 
+			FROM
+				DW_RESERVE_ORDER a
+			LEFT JOIN DW_RESERVE_FOLLOW_RECORD b ON b.RESERVE_ORDER_ID = a.RESERVE_ORDER_ID
+			LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT c ON c.ADMIN_LOGIN_ACCOUNT_ID = b.LEARNCENTER_USER_ID
+			LEFT JOIN DW_LEARNCENTER_USER d ON d.ADMIN_LOGIN_ACCOUNT_ID = C.ADMIN_LOGIN_ACCOUNT_ID
+			LEFT JOIN DW_STAFF_INFO e ON e.STAFF_ID = c.ADMIN_ID
+			LEFT JOIN DW_LEARNCENTER_INFO f ON f.LEARNCENTER_ID = d.LEARNCENTER_ID
+			LEFT JOIN DW_STUDENT_KEY_MAP g ON g.OLD_STUDENT_ID = a.USER_ID
+			LEFT JOIN DW_STUDENT_INFO h ON h.STUDENT_ID = g.STUDENT_ID
+			LEFT JOIN DW_PRODUCT_INFO i ON i.PRODUCT_ID = a.PRODUCT_ID
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				a.USER_ID,				
+				a.USER_ACCOUNT_ID,				
+				h.STUDENT_NAME,				
+				h.MOBILE,				
+				a.PRODUCT_ID,				
+				i.PRODUCT_NAME,			
+				a.COLLEGES,				
+				a.COLLEGES AS SCHOOLCHINESENAME,				
+				d.LEARNCENTER_ID,				
+				f.LEARNCENTER_NAME,				
+				b.LEARNCENTER_USER_ID,				
+				c.LOGIN_ACCOUNT,				
+				e.STAFF_NAME,				
+				b.FOLLOW_RESULT,	
+				j.CODE_NAME as FOLLOW_RESULT_NAME,			
+				b.FOLLOW_CONTENT,				
+				b.FOLLOW_DATE,				
+				a.ORDER_STATUS,		
+				k.CODE_NAME as ORDER_STATUS_NAME,		
+				a.CREATED_DT 
+			FROM
+				DW_RESERVE_ORDER a
+			LEFT JOIN DW_RESERVE_FOLLOW_RECORD b ON b.RESERVE_ORDER_ID = a.RESERVE_ORDER_ID
+			LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT c ON c.ADMIN_LOGIN_ACCOUNT_ID = b.LEARNCENTER_USER_ID
+			LEFT JOIN DW_LEARNCENTER_USER d ON d.ADMIN_LOGIN_ACCOUNT_ID = C.ADMIN_LOGIN_ACCOUNT_ID
+			LEFT JOIN DW_STAFF_INFO e ON e.STAFF_ID = c.ADMIN_ID
+			LEFT JOIN DW_LEARNCENTER_INFO f ON f.LEARNCENTER_ID = d.LEARNCENTER_ID
+			LEFT JOIN DW_STUDENT_KEY_MAP g ON g.OLD_STUDENT_ID = a.USER_ID
+			LEFT JOIN DW_STUDENT_INFO h ON h.STUDENT_ID = g.STUDENT_ID
+			LEFT JOIN DW_PRODUCT_INFO i ON i.PRODUCT_ID = a.PRODUCT_ID
+			LEFT JOIN DW_SYS_DATA j on j.CODE_VALUE = b.FOLLOW_RESULT and j.DICT_TYPE_CODE = 'FOLLOW_RESULT'
+			LEFT JOIN DW_SYS_DATA k on k.CODE_VALUE = a.ORDER_STATUS and k.DICT_TYPE_CODE = 'ORDER_STATUS'
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>

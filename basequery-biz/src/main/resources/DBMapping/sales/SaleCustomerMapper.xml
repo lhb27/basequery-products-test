@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eenet.basequery.sales.SaleCustomer" >
+	<resultMap type="com.eenet.basequery.sales.SaleCustomer" id="default">
+		<result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+		<result column="PERSONS_SCALE" property="personsScale" jdbcType="VARCHAR" />
+		<result column="REG_FUND" property="regFund" jdbcType="VARCHAR" />
+		<result column="COOPERATE_STATUS" property="cooperateStatus" jdbcType="VARCHAR" />
+		<result column="COOPERATE_STATUS_NAME" property="cooperateStatusName" jdbcType="VARCHAR" />
+		<result column="PROVINCE_CODE" property="provinceCode" jdbcType="VARCHAR" />
+		<result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR" />
+		<result column="CITY_CODE" property="cityCode" jdbcType="VARCHAR" />
+		<result column="CITY_NAME" property="cityName" jdbcType="VARCHAR" />
+		<result column="DISTRICT_CODE" property="districtCode" jdbcType="VARCHAR" />
+		<result column="DISTINCT_NAME" property="distinctName" jdbcType="VARCHAR" />
+		<result column="ACTIVATE_DT" property="activateDt" jdbcType="DATE" />
+		<result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+		<result column="CHANNEL_CODE" property="channelCode" jdbcType="VARCHAR" />
+		<result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	
+	<select id="query_count" resultType="java.lang.Integer" parameterType="com.eenet.base.dao.SQLCondition">
+		<![CDATA[
+		select count(1) from (
+			SELECT
+				b.CUSTOMER_NAME,				
+				b.PERSONS_SCALE,				
+				b.REG_FUND,				 
+				b.COOPERATE_STATUS,				 
+				b.PROVINCE AS PROVINCE_code,				
+				c.AREA_NAME AS PROVINCE_name,				
+				b.CITY AS city_code,				
+				d.AREA_NAME AS city_name,				
+				b.DISTRICT AS DISTRICT_code,				
+				e.AREA_NAME AS DISTINCT_name,				
+				b.ACTIVATE_DT,				
+				f.CHANNEL_NAME,				
+				F.CHANNEL_CODE,				
+				h.STAFF_NAME 
+			FROM 
+				DW_CHANNEL_CUSTOMER a 
+				INNER JOIN DW_CUSTOMER_INFO b ON b.CUSTOMER_ID = a.CUSTOMER_ID
+				LEFT JOIN DW_AREA c ON c.AREA_CODE = b.PROVINCE
+				LEFT JOIN DW_AREA d ON d.AREA_CODE = b.CITY
+				LEFT JOIN DW_AREA e ON e.AREA_CODE = b.DISTRICT
+				INNER JOIN DW_CHANNEL_INFO f ON f.CHANNEL_ID = a.CHANNEL_ID
+				LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT g ON g.ADMIN_LOGIN_ACCOUNT_ID = a.ADMIN_LOGIN_ACCOUNT_ID
+				LEFT JOIN DW_STAFF_INFO h ON h.STAFF_ID =  g.ADMIN_ID
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+	</select>
+	
+	<select id="query" resultMap="default" parameterType="com.eenet.base.dao.SQLCondition">
+		<include refid="com.eenet.base.${db.type}.rowNum_query_prefix" />
+		<![CDATA[
+		SELECT * FROM (
+			SELECT
+				b.CUSTOMER_NAME,				
+				b.PERSONS_SCALE,				
+				b.REG_FUND,				 
+				b.COOPERATE_STATUS,			
+				i.CODE_NAME as 	 COOPERATE_STATUS_NAME,
+				b.PROVINCE AS PROVINCE_code,				
+				c.AREA_NAME AS PROVINCE_name,				
+				b.CITY AS city_code,				
+				d.AREA_NAME AS city_name,				
+				b.DISTRICT AS DISTRICT_code,				
+				e.AREA_NAME AS DISTINCT_name,				
+				b.ACTIVATE_DT,				
+				f.CHANNEL_NAME,				
+				F.CHANNEL_CODE,				
+				h.STAFF_NAME 
+			FROM 
+				DW_CHANNEL_CUSTOMER a 
+				INNER JOIN DW_CUSTOMER_INFO b ON b.CUSTOMER_ID = a.CUSTOMER_ID
+				LEFT JOIN DW_AREA c ON c.AREA_CODE = b.PROVINCE
+				LEFT JOIN DW_AREA d ON d.AREA_CODE = b.CITY
+				LEFT JOIN DW_AREA e ON e.AREA_CODE = b.DISTRICT
+				INNER JOIN DW_CHANNEL_INFO f ON f.CHANNEL_ID = a.CHANNEL_ID
+				LEFT JOIN AUTHEN_ADMIN_LOGIN_ACCOUNT g ON g.ADMIN_LOGIN_ACCOUNT_ID = a.ADMIN_LOGIN_ACCOUNT_ID
+				LEFT JOIN DW_STAFF_INFO h ON h.STAFF_ID =  g.ADMIN_ID
+				LEFT JOIN DW_SYS_DATA i on i.CODE_VALUE = b.COOPERATE_STATUS and i.DICT_TYPE_CODE = 'COOPERATE_STATUS'
+		) TB WHERE 1=1 
+		]]>
+		<include refid="com.eenet.base.${db.type}.query_quote" />
+		<include refid="com.eenet.base.${db.type}.orderBy_quote" />
+		<include refid="com.eenet.base.${db.type}.rowNum_quote_suffix" />
+	</select>
+
+</mapper>
